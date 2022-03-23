@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
+
+
+
 
 @Component({
   selector: 'app-alumnos',
@@ -29,22 +33,31 @@ export class AlumnosComponent implements OnInit {
       ])
      }
     )
-
-
   }
 
-  enviarNoControl(){
-    //traer datos de un usuario
-    this.http.get(this.url+'/'+this.formNocontrol.value.noControl,{headers:this.header}).subscribe(
-      (data)=>{
-       //acceder arreglo [0] para ver datos
-        this.alumnos=data;
-        console.log(this.alumnos);
 
-      }
-
+enviarNoControl(){
+  //traer datos de un usuario
+  this.http.get(this.url+'/'+this.formNocontrol.value.noControl,{headers:this.header}).subscribe(
+    (data)=>{
+      this.alumnos=data;
+    },
+    (error)=>{
+      const err = error
+      this.errorBusqueda(err);
+      this.alumnos=null;
+    }
     )
-
 }
+
+errorBusqueda(error:any){
+  Swal.fire({
+    icon: 'error',
+    title: 'No se encontro el numero de control: ' + this.formNocontrol.value.noControl,
+  })
+}
+
+
+
 
 }
